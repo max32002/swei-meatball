@@ -5,8 +5,10 @@
 相比於思源宋體，獅尾肉丸的造型更加簡明現代，版面效果清新輕快。
 
 「思源宋體」、「獅尾四季春」、「獅尾肉丸」的比較：
-
 ![字體比較](https://github.com/max32002/swei-meatball/raw/master/preview/compare_noto_serif.png)
+
+和思源宋體一樣，支援7種的字重：
+![字重比較](https://github.com/max32002/swei-meatball/raw/master/preview/compare_style.png)
 
 * 在「肉」、「糸」、「女」、「辶」、「食」的筆畫，獅尾比較相似台灣教育部推薦字體筆順，適合教育用途。
 * 在「草」部的筆畫，獅尾是分開的二個部份。
