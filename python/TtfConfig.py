@@ -2,7 +2,7 @@
 #encoding=utf-8
 
 class TtfConfig():
-    VERSION = "1.040"
+    VERSION = "1.042"
     PROCESS_MODE = "SPRING"
     PROCESS_MODE = "MEATBALL"
 
@@ -28,14 +28,21 @@ class TtfConfig():
     # for rule#101
     # in regular=80 to 57
     # for case:.2639 「真」被擠壓為38
-    ROW_TRIANGLE_HEIGHT_MIN = 30
-    ROW_TRIANGLE_HEIGHT_MAX = 100
+    # for case:uni7665 癥，中間的「山」為29
+    ROW_TRIANGLE_HEIGHT_MIN = 26
+    # for case:uni4E00 一：104
+    ROW_TRIANGLE_HEIGHT_MAX = 115
+    
     # in regular=121 to 86
-    ROW_TRIANGLE_SLIDE_MIN = 66
-    ROW_TRIANGLE_SLIDE_MAX = 141
+    # for uni5A64「婤」, value:63, 因為被截斷
+    ROW_TRIANGLE_SLIDE_MIN = 51
+    # for case:uni4E00 一：154
+    ROW_TRIANGLE_SLIDE_MAX = 165
+
     # in regular=29,31 to (.26356, 片)47, (case.10924 公, Regular) 73
     ROW_TRIANGLE_CHIN_MIN = 21
-    ROW_TRIANGLE_CHIN_MAX = 84
+    # in regular=85 (uni6C43 汃)
+    ROW_TRIANGLE_CHIN_MAX = 95
 
     # in regular=46, (case.11158 分, Regular) 69
     ROW_TRIANGLE_FLAT_CHIN_MIN = 26
@@ -55,16 +62,16 @@ class TtfConfig():
 
         if self.STYLE in ["Black"]:
             # black style, for case:三, 131
-            self.ROW_TRIANGLE_HEIGHT_MIN = 30
+            self.ROW_TRIANGLE_HEIGHT_MIN = 28
             self.ROW_TRIANGLE_HEIGHT_MAX = 151
 
             # black style, for case:三, 186
-            self.ROW_TRIANGLE_SLIDE_MIN = 66
+            self.ROW_TRIANGLE_SLIDE_MIN = 63
             self.ROW_TRIANGLE_SLIDE_MAX = 200
 
             # black style, for case:三, 34, (case.10924 公, Black) 104
             self.ROW_TRIANGLE_CHIN_MIN = 21
-            self.ROW_TRIANGLE_CHIN_MAX = 120
+            self.ROW_TRIANGLE_CHIN_MAX = 125
 
             # in regular=46
             self.ROW_TRIANGLE_FLAT_CHIN_MIN = 26
@@ -81,14 +88,14 @@ class TtfConfig():
 
         if self.STYLE in ["Bold"]:
             # in regular=80 to 57
-            self.ROW_TRIANGLE_HEIGHT_MIN = 30
+            self.ROW_TRIANGLE_HEIGHT_MIN = 28
             self.ROW_TRIANGLE_HEIGHT_MAX = 141
             # in regular=121 to 86
-            self.ROW_TRIANGLE_SLIDE_MIN = 66
-            self.ROW_TRIANGLE_SLIDE_MAX = 175
+            self.ROW_TRIANGLE_SLIDE_MIN = 60
+            self.ROW_TRIANGLE_SLIDE_MAX = 190
             # in regular=29,31 to (.26356, 片)47
             self.ROW_TRIANGLE_CHIN_MIN = 21
-            self.ROW_TRIANGLE_CHIN_MAX = 106
+            self.ROW_TRIANGLE_CHIN_MAX = 116
 
             # in regular=46
             self.ROW_TRIANGLE_FLAT_CHIN_MIN = 26
@@ -106,14 +113,14 @@ class TtfConfig():
 
         if self.STYLE in ["SemiBold","Medium"]:
             # in regular=80 to 57
-            self.ROW_TRIANGLE_HEIGHT_MIN = 30
-            self.ROW_TRIANGLE_HEIGHT_MAX = 120
+            self.ROW_TRIANGLE_HEIGHT_MIN = 28
+            self.ROW_TRIANGLE_HEIGHT_MAX = 130
             # in regular=121 to 86
-            self.ROW_TRIANGLE_SLIDE_MIN = 66
-            self.ROW_TRIANGLE_SLIDE_MAX = 165
+            self.ROW_TRIANGLE_SLIDE_MIN = 53
+            self.ROW_TRIANGLE_SLIDE_MAX = 180
             # in regular=29,31 to (.26356, 片)47
             self.ROW_TRIANGLE_CHIN_MIN = 21
-            self.ROW_TRIANGLE_CHIN_MAX = 95
+            self.ROW_TRIANGLE_CHIN_MAX = 106
 
             # in regular=46
             self.ROW_TRIANGLE_FLAT_CHIN_MIN = 26
@@ -130,14 +137,14 @@ class TtfConfig():
 
         if self.STYLE in ["Light","ExtraLight"]:
             # in regular=80 to 57
-            self.ROW_TRIANGLE_HEIGHT_MIN = 28
-            self.ROW_TRIANGLE_HEIGHT_MAX = 100
+            self.ROW_TRIANGLE_HEIGHT_MIN = 24
+            self.ROW_TRIANGLE_HEIGHT_MAX = 110
             # in regular=121 to 86
-            self.ROW_TRIANGLE_SLIDE_MIN = 56
-            self.ROW_TRIANGLE_SLIDE_MAX = 141
+            self.ROW_TRIANGLE_SLIDE_MIN = 46
+            self.ROW_TRIANGLE_SLIDE_MAX = 160
             # in regular=29,31 to (.26356, 片)47
             self.ROW_TRIANGLE_CHIN_MIN = 18
-            self.ROW_TRIANGLE_CHIN_MAX = 80
+            self.ROW_TRIANGLE_CHIN_MAX = 88
 
             # in regular=46
             self.ROW_TRIANGLE_FLAT_CHIN_MIN = 22

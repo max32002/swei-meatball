@@ -15,16 +15,11 @@ class Rule(Rule.Rule):
         redo_travel=False
         check_first_point = False
 
-        # default（normal): 1.4
-        SLIDE_1_PERCENT_MIN = 1.11
-        SLIDE_1_PERCENT_MAX = 1.63
-
-        # default: 1.43
-        SLIDE_2_PERCENT_MIN = 1.23
-        SLIDE_2_PERCENT_MAX = 1.63
-
         # default: 1.20, for case:.10075 例, reqular:1.433
-        SLIDE_3_PERCENT_MIN = 1.00
+        # for case:uni905C 遜, 0.925 / 0.72 / 1.785
+        # for case:uni6B8D 殍, 0.64 / 0.725 / 1.775
+        # for uni9BCA,鯊的魚. 0.465 / 0.535 / 1.98
+        SLIDE_3_PERCENT_MIN = 0.41
         SLIDE_3_PERCENT_MAX = 1.60
 
         # default: 0.8 to 0.53
@@ -32,8 +27,8 @@ class Rule(Rule.Rule):
         SLIDE_4_PERCENT_MAX = 0.99
 
         # default: 1.7
-        SLIDE_5_PERCENT_MIN = 1.51
-        SLIDE_5_PERCENT_MAX = 1.91
+        SLIDE_5_PERCENT_MIN = 1.55
+        SLIDE_5_PERCENT_MAX = 1.89
 
         # clone
         format_dict_array=[]
@@ -64,7 +59,7 @@ class Rule(Rule.Rule):
                 #is_debug_mode = True
 
                 if is_debug_mode:
-                    debug_coordinate_list = [[127,569]]
+                    debug_coordinate_list = [[542,532]]
                     if not([format_dict_array[idx]['x'],format_dict_array[idx]['y']] in debug_coordinate_list):
                         continue
 
@@ -80,67 +75,69 @@ class Rule(Rule.Rule):
                 if is_match_pattern:
                     fail_code = 100
                     is_match_pattern = False
-                    if format_dict_array[(idx+2)%nodes_length]['t'] == 'l':
+                    if True:
+                    #if format_dict_array[(idx+2)%nodes_length]['t'] == 'l':
                         # for case:.18791 應，+3=l
                         #if format_dict_array[(idx+3)%nodes_length]['t'] == 'c':
                         if format_dict_array[(idx+4)%nodes_length]['t'] == 'l':
                             # +5下巴，不限定為曲線，可處理直線下巴。
-                            if format_dict_array[(idx+6)%nodes_length]['t'] == 'l':
+
+                            # for uni9BCA,鯊的魚.
+                            #if format_dict_array[(idx+6)%nodes_length]['t'] == 'l':
+                            if True:
                                 is_match_pattern = True
 
                 if is_match_pattern:
                     fail_code = 200
                     is_match_pattern = False
-                    if format_dict_array[(idx+1)%nodes_length]['distance'] >= self.config.COL_STROKE_WIDTH_MIN:
-                        fail_code = 210
-                        if format_dict_array[(idx+1)%nodes_length]['distance'] <= self.config.COL_STROKE_WIDTH_MAX:
-                            fail_code = 220
-                            if format_dict_array[(idx+3)%nodes_length]['distance'] >= self.config.COL_TRIANGLE_CHIN_MIN:
-                                fail_code = 230
-                                if format_dict_array[(idx+3)%nodes_length]['distance'] <= self.config.COL_STROKE_WIDTH_MAX:
-                                    fail_code = 240
-                                    if format_dict_array[(idx+4)%nodes_length]['distance'] >= self.config.COL_TRIANGLE_CHIN_MIN:
-                                        fail_code = 250
-                                        if format_dict_array[(idx+4)%nodes_length]['distance'] <= self.config.COL_STROKE_WIDTH_MAX:
-                                            fail_code = 260
-                                            # should very long
-                                            if format_dict_array[(idx+5)%nodes_length]['distance'] >= self.config.COL_STROKE_WIDTH_MAX:
-                                                is_match_pattern = True
+
+                    if format_dict_array[(idx+3)%nodes_length]['distance'] >= self.config.COL_TRIANGLE_CHIN_MIN:
+                        fail_code = 230
+                        if format_dict_array[(idx+3)%nodes_length]['distance'] <= self.config.COL_STROKE_WIDTH_MAX:
+                            fail_code = 240
+                            if format_dict_array[(idx+4)%nodes_length]['distance'] >= self.config.COL_TRIANGLE_CHIN_MIN:
+                                fail_code = 250
+                                if format_dict_array[(idx+4)%nodes_length]['distance'] <= self.config.COL_STROKE_WIDTH_MAX:
+                                    fail_code = 260
+                                    # usually, +5 should be a little long.
+                                    if format_dict_array[(idx+5)%nodes_length]['distance'] >= self.config.COL_TRIANGLE_CHIN_MIN:
+                                        is_match_pattern = True
 
                 if is_match_pattern:
                     fail_code = 300
                     is_match_pattern = False
-                    # 「/」
-                    if format_dict_array[(idx+0)%nodes_length]['x_direction'] > 0:
-                        fail_code = 310
-                        if format_dict_array[(idx+1)%nodes_length]['x_direction'] > 0:
-                            if format_dict_array[(idx+2)%nodes_length]['x_direction'] < 0:
-                                if format_dict_array[(idx+3)%nodes_length]['x_direction'] > 0:
-                                    if format_dict_array[(idx+4)%nodes_length]['x_direction'] < 0:
-                                        if format_dict_array[(idx+5)%nodes_length]['x_direction'] == 0:
-                                            is_match_pattern = True
 
+                    # 「/」
+                    if format_dict_array[(idx+2)%nodes_length]['x_direction'] < 0:
+                        fail_code = 310
+                        if format_dict_array[(idx+3)%nodes_length]['x_direction'] > 0:
+                            fail_code = 311
+                            if format_dict_array[(idx+4)%nodes_length]['x_direction'] < 0:
+                                fail_code = 312
+                                # for normal case.
+                                if format_dict_array[(idx+5)%nodes_length]['x_equal_fuzzy']:
+                                    is_match_pattern = True
+                                
+                                # for uni9BCA,鯊的魚.
+                                if format_dict_array[(idx+5)%nodes_length]['x_direction'] < 0:
+                                    is_match_pattern = True
 
                 if is_match_pattern:
                     fail_code = 400
                     is_match_pattern = False
-                    if format_dict_array[(idx+0)%nodes_length]['y_direction'] > 0:
-                        fail_code = 410
-                        if format_dict_array[(idx+1)%nodes_length]['y_direction'] <= 0:
-                            #print(format_dict_array[(idx+2)%nodes_length]['y_direction'])
-                            if format_dict_array[(idx+3)%nodes_length]['y1'] <= format_dict_array[(idx+2)%nodes_length]['y']:
-                                if format_dict_array[(idx+3)%nodes_length]['y_direction'] < 0:
-                                    if format_dict_array[(idx+4)%nodes_length]['y_direction'] <= 0:
-                                        if format_dict_array[(idx+5)%nodes_length]['y_direction'] <= 0:
-                                            is_match_pattern = True
+
+                    if format_dict_array[(idx+3)%nodes_length]['y1'] <= format_dict_array[(idx+2)%nodes_length]['y']:
+                        if format_dict_array[(idx+3)%nodes_length]['y_direction'] < 0:
+                            if format_dict_array[(idx+4)%nodes_length]['y_direction'] <= 0:
+                                if format_dict_array[(idx+5)%nodes_length]['y_direction'] <= 0:
+                                    is_match_pattern = True
 
                 # skip small angle
                 if is_match_pattern:
                     fail_code = 500
                     is_match_pattern = False
 
-                    slide_percent_1 = spline_util.slide_percent(format_dict_array[(idx+0)%nodes_length]['x'],format_dict_array[(idx+0)%nodes_length]['y'],format_dict_array[(idx+1)%nodes_length]['x'],format_dict_array[(idx+1)%nodes_length]['y'],format_dict_array[(idx+2)%nodes_length]['x'],format_dict_array[(idx+2)%nodes_length]['y'])
-                    slide_percent_2 = spline_util.slide_percent(format_dict_array[(idx+1)%nodes_length]['x'],format_dict_array[(idx+1)%nodes_length]['y'],format_dict_array[(idx+2)%nodes_length]['x'],format_dict_array[(idx+2)%nodes_length]['y'],format_dict_array[(idx+3)%nodes_length]['x'],format_dict_array[(idx+3)%nodes_length]['y'])
+                    #slide_percent_2 = spline_util.slide_percent(format_dict_array[(idx+1)%nodes_length]['x'],format_dict_array[(idx+1)%nodes_length]['y'],format_dict_array[(idx+2)%nodes_length]['x'],format_dict_array[(idx+2)%nodes_length]['y'],format_dict_array[(idx+3)%nodes_length]['x'],format_dict_array[(idx+3)%nodes_length]['y'])
                     slide_percent_3 = spline_util.slide_percent(format_dict_array[(idx+2)%nodes_length]['x'],format_dict_array[(idx+2)%nodes_length]['y'],format_dict_array[(idx+3)%nodes_length]['x'],format_dict_array[(idx+3)%nodes_length]['y'],format_dict_array[(idx+4)%nodes_length]['x'],format_dict_array[(idx+4)%nodes_length]['y'])
                     slide_percent_4 = spline_util.slide_percent(format_dict_array[(idx+3)%nodes_length]['x'],format_dict_array[(idx+3)%nodes_length]['y'],format_dict_array[(idx+4)%nodes_length]['x'],format_dict_array[(idx+4)%nodes_length]['y'],format_dict_array[(idx+5)%nodes_length]['x'],format_dict_array[(idx+5)%nodes_length]['y'])
                     slide_percent_5 = spline_util.slide_percent(format_dict_array[(idx+4)%nodes_length]['x'],format_dict_array[(idx+4)%nodes_length]['y'],format_dict_array[(idx+5)%nodes_length]['x'],format_dict_array[(idx+5)%nodes_length]['y'],format_dict_array[(idx+6)%nodes_length]['x'],format_dict_array[(idx+6)%nodes_length]['y'])
@@ -148,23 +145,30 @@ class Rule(Rule.Rule):
                     #if True:
                     #if False:
                     if is_debug_mode:
-                        print("slide_percent 1:", slide_percent_1)
-                        #print("data:",format_dict_array[(idx+0)%nodes_length]['x'],format_dict_array[(idx+0)%nodes_length]['y'],format_dict_array[(idx+1)%nodes_length]['x'],format_dict_array[(idx+1)%nodes_length]['y'],format_dict_array[(idx+2)%nodes_length]['x'],format_dict_array[(idx+2)%nodes_length]['y'])
-                        print("slide_percent 2:", slide_percent_2)
+                        #print("slide_percent 2:", slide_percent_2)
                         #print("data:",format_dict_array[(idx+1)%nodes_length]['x'],format_dict_array[(idx+1)%nodes_length]['y'],format_dict_array[(idx+2)%nodes_length]['x'],format_dict_array[(idx+2)%nodes_length]['y'],format_dict_array[(idx+3)%nodes_length]['x'],format_dict_array[(idx+3)%nodes_length]['y'])
                         print("slide_percent 3:", slide_percent_3)
                         #print("data:",format_dict_array[(idx+2)%nodes_length]['x'],format_dict_array[(idx+2)%nodes_length]['y'],format_dict_array[(idx+3)%nodes_length]['x'],format_dict_array[(idx+3)%nodes_length]['y'],format_dict_array[(idx+4)%nodes_length]['x'],format_dict_array[(idx+4)%nodes_length]['y'])
                         print("slide_percent 4:", slide_percent_4)
                         print("slide_percent 5:", slide_percent_5)
 
-                    if slide_percent_1 >= SLIDE_1_PERCENT_MIN and slide_percent_1 <= SLIDE_1_PERCENT_MAX:
+                    # if will fail, try virtual line.
+                    if slide_percent_5 > SLIDE_5_PERCENT_MAX:
+                        x2 = format_dict_array[(idx+5)%nodes_length]['x']
+                        y2 = format_dict_array[(idx+5)%nodes_length]['y']
+                        if format_dict_array[(idx+5)%nodes_length]['t']=='c':
+                            x2 = format_dict_array[(idx+5)%nodes_length]['x2']
+                            y2 = format_dict_array[(idx+5)%nodes_length]['y2']
+                        slide_percent_5 = spline_util.slide_percent(x2,y2,format_dict_array[(idx+5)%nodes_length]['x'],format_dict_array[(idx+5)%nodes_length]['y'],format_dict_array[(idx+6)%nodes_length]['x'],format_dict_array[(idx+6)%nodes_length]['y'])
+                        #print("slide_percent 5 virtual:", slide_percent_5)
+
+                    if slide_percent_3 >= SLIDE_3_PERCENT_MIN and slide_percent_3 <= SLIDE_3_PERCENT_MAX:
                         fail_code = 510
-                        if slide_percent_2 >= SLIDE_2_PERCENT_MIN and slide_percent_2 <= SLIDE_2_PERCENT_MAX:
-                            fail_code = 520
-                            if slide_percent_3 >= SLIDE_3_PERCENT_MIN and slide_percent_3 <= SLIDE_3_PERCENT_MAX:
-                                if slide_percent_4 >= SLIDE_4_PERCENT_MIN and slide_percent_4 <= SLIDE_4_PERCENT_MAX:
-                                    if slide_percent_5 >= SLIDE_5_PERCENT_MIN and slide_percent_5 <= SLIDE_5_PERCENT_MAX:
-                                        is_match_pattern = True
+                        if slide_percent_4 >= SLIDE_4_PERCENT_MIN and slide_percent_4 <= SLIDE_4_PERCENT_MAX:
+                            fail_code = 511
+                            
+                            if slide_percent_5 >= SLIDE_5_PERCENT_MIN and slide_percent_5 <= SLIDE_5_PERCENT_MAX:
+                                is_match_pattern = True
 
                 if is_debug_mode:
                     if not is_match_pattern:

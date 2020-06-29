@@ -19,17 +19,18 @@ class Rule(Rule.Rule):
         SLIDE_1_PERCENT_MIN = 1.66
         SLIDE_1_PERCENT_MAX = 1.94
 
-        # default: 0.63 (.2639,真) 0.76
-        VERTICAL_SLIDE_1_PERCENT_MIN = 0.53
+        # default: 0.63 (.2639,真) 0.76 / uni5E6E(幮) 0.51
+        VERTICAL_SLIDE_1_PERCENT_MIN = 0.40
         VERTICAL_SLIDE_1_PERCENT_MAX = 0.89
 
-        # default: 1.36 to 1.2, (.26310, 為) 1.46
+        # default: 1.36 to 1.2, (.26310, 為) 1.46 / uni5D6F 嵯 1.57.
         SLIDE_2_PERCENT_MIN = 1.10
-        SLIDE_2_PERCENT_MAX = 1.56
+        SLIDE_2_PERCENT_MAX = 1.69
 
         # default: 1.13 to 1.26,(.2639,真)1.36, (.26356, 片) 1.0, (.10924, 公) 0.80
+        # for case: (uni8F63,轣) 1.485
         SLIDE_3_PERCENT_MIN = 0.70
-        SLIDE_3_PERCENT_MAX = 1.47
+        SLIDE_3_PERCENT_MAX = 1.59
 
         # clone
         format_dict_array=[]
@@ -69,7 +70,7 @@ class Rule(Rule.Rule):
                 #is_debug_mode = True
 
                 if is_debug_mode:
-                    debug_coordinate_list = [[517,543]]
+                    debug_coordinate_list = [[151,599]]
                     if not([format_dict_array[idx]['x'],format_dict_array[idx]['y']] in debug_coordinate_list):
                         continue
 
@@ -84,23 +85,29 @@ class Rule(Rule.Rule):
                 # come from vertical line
                 is_from_vertical = False
 
-                # two kind of chini
+                # two kind of chin.
                 is_flat_chin = False
 
                 # from right to left.
                 is_goto_left = False
 
-                # slash mode, for case:.12816
+                # slash mode, for case:.12816 「嘠」.
                 is_slash_with_arm = False
 
                 # for case:湖的月，左右的二個三角形直接連在一起。
                 is_slash_with_triangle = False
 
+                # for case: 攖 uni6516
+                is_more_one_dot = False
+
                 # match ?ll?c
                 if is_match_pattern:
                     fail_code = 100
                     is_match_pattern = False
-                    if format_dict_array[(idx+1)%nodes_length]['t'] == 'l':
+
+                    if True:
+                    # for 「奿」和「妀」，+1=='c', skip check +1=='l'
+                    #if format_dict_array[(idx+1)%nodes_length]['t'] == 'l':
                         if format_dict_array[(idx+2)%nodes_length]['t'] == 'l':
                             if format_dict_array[(idx+4)%nodes_length]['t'] == 'c':
                                 is_match_pattern = True
@@ -108,6 +115,14 @@ class Rule(Rule.Rule):
                             if format_dict_array[(idx+4)%nodes_length]['t'] == 'l':
                                 is_match_pattern = True
                                 is_flat_chin = True
+                                
+                                if format_dict_array[(idx+5)%nodes_length]['t'] == 'c':
+                                    is_match_pattern = True
+                                    is_more_one_dot = True
+
+                if is_debug_mode:
+                    print("is_flat_chin:", is_flat_chin)
+                    print("is_more_one_dot:", is_more_one_dot)
 
                 if is_match_pattern:
                     fail_code = 200
@@ -135,6 +150,16 @@ class Rule(Rule.Rule):
                                             fail_code = 221
                                             if format_dict_array[(idx+3)%nodes_length]['distance'] <= self.config.ROW_TRIANGLE_FLAT_CHIN_MAX:
                                                 is_match_pattern = True
+                    if is_more_one_dot:
+                        # very short edge.
+                        if format_dict_array[(idx+1)%nodes_length]['distance'] <= 20:
+                            if format_dict_array[(idx+2)%nodes_length]['distance'] >= self.config.ROW_TRIANGLE_HEIGHT_MIN:
+                                if format_dict_array[(idx+3)%nodes_length]['distance'] >= self.config.ROW_TRIANGLE_SLIDE_MIN:
+                                    if format_dict_array[(idx+3)%nodes_length]['distance'] <= self.config.ROW_TRIANGLE_SLIDE_MAX:
+                                        # curve chin
+                                        if format_dict_array[(idx+4)%nodes_length]['distance'] >= self.config.ROW_TRIANGLE_CHIN_MIN:
+                                            if format_dict_array[(idx+4)%nodes_length]['distance'] <= self.config.ROW_TRIANGLE_CHIN_MAX:
+                                                is_match_pattern = True
 
                 if is_match_pattern:
                     fail_code = 300
@@ -147,12 +172,26 @@ class Rule(Rule.Rule):
                                     is_match_pattern = True
 
                     # allow +0 vertical or horizontal
+                    # case 1:
+                    is_pass_dot_0_check = False
                     if format_dict_array[(idx+0)%nodes_length]['x_equal_fuzzy']:
+                        is_pass_dot_0_check = True
+
+                    # case 2:
+                    # come from vertical, just check x position diff under 30px.
+                    if abs(format_dict_array[(idx+1)%nodes_length]['x'] - format_dict_array[(idx+0)%nodes_length]['x']) <= 30:
+                        if abs(format_dict_array[(idx+1)%nodes_length]['y'] - format_dict_array[(idx+0)%nodes_length]['y']) >= 60:
+                            is_pass_dot_0_check = True
+
+                    if is_pass_dot_0_check:
                         if format_dict_array[(idx+1)%nodes_length]['x_direction'] > 0:
                             if format_dict_array[(idx+2)%nodes_length]['x_direction'] > 0:
                                 if format_dict_array[(idx+3)%nodes_length]['x_direction'] < 0:
                                     is_match_pattern = True
                                     is_from_vertical = True
+
+                    #print("is_from_vertical:", is_from_vertical)
+                    #print("is_pass_dot_0_check for x:", is_pass_dot_0_check)
 
                     # 左下角的三角形。
                     if format_dict_array[(idx+0)%nodes_length]['x_direction'] < 0:
@@ -162,13 +201,54 @@ class Rule(Rule.Rule):
                                     is_match_pattern = True
                                     is_goto_left = True
 
+                    # 右上角的三角形 + more 1 dot.。
+                    if is_more_one_dot:
+                        # very short edge.
+                        if format_dict_array[(idx+0)%nodes_length]['x_direction'] > 0:
+                            if format_dict_array[(idx+1)%nodes_length]['x_direction'] < 0:
+                                if format_dict_array[(idx+2)%nodes_length]['x_direction'] > 0:
+                                    if format_dict_array[(idx+3)%nodes_length]['x_direction'] > 0:
+                                        if format_dict_array[(idx+4)%nodes_length]['x_direction'] < 0:
+                                            is_match_pattern = True
+
+                    # 左下角的三角形 + more 1 dot.。
+                    if is_more_one_dot:
+                        # very short edge.
+                        if format_dict_array[(idx+0)%nodes_length]['x_direction'] < 0:
+                            if format_dict_array[(idx+1)%nodes_length]['x_direction'] > 0:
+                                if format_dict_array[(idx+2)%nodes_length]['x_direction'] < 0:
+                                    if format_dict_array[(idx+3)%nodes_length]['x_direction'] < 0:
+                                        if format_dict_array[(idx+4)%nodes_length]['x_direction'] > 0:
+                                            is_match_pattern = True
+                                            is_goto_left = True
 
                 if is_match_pattern:
                     fail_code = 400
                     is_match_pattern = False
                     # allow +0 vertical or horizontal
+
+                    # from horizon.
+                    is_pass_dot_0_check = False
                     if format_dict_array[(idx+0)%nodes_length]['y_equal_fuzzy']:
-                        fail_code = 410
+                        is_pass_dot_0_check = True
+
+                    # for uni780C, 砌 的口。
+                    if not is_pass_dot_0_check:
+                        if format_dict_array[(idx+0)%nodes_length]['distance'] > 70:
+                            if format_dict_array[(idx+0)%nodes_length]['y'] > format_dict_array[(idx+1)%nodes_length]['y']:
+                                if format_dict_array[(idx+0)%nodes_length]['y'] - format_dict_array[(idx+1)%nodes_length]['y'] < 20:
+                                    is_pass_dot_0_check = True
+
+                    # for uni98EF,飯 的食的一。
+                    # 針對特定情況，放寬 y_equal_fuzzy, 放寬條件，也許會顯響到其他正常的筆畫。
+                    if not is_pass_dot_0_check:
+                        if format_dict_array[(idx+0)%nodes_length]['distance'] >= 102:
+                            if format_dict_array[(idx+4)%nodes_length]['distance'] >= 102:
+                                if abs(format_dict_array[(idx+0)%nodes_length]['y'] - format_dict_array[(idx+1)%nodes_length]['y']) <= 12:
+                                    if abs(format_dict_array[(idx+0)%nodes_length]['x'] - format_dict_array[(idx+1)%nodes_length]['x']) >= 102:
+                                        is_pass_dot_0_check = True
+
+                    if is_pass_dot_0_check:
                         if format_dict_array[(idx+1)%nodes_length]['y_direction'] > 0:
                             if format_dict_array[(idx+2)%nodes_length]['y_direction'] < 0:
                                 if format_dict_array[(idx+3)%nodes_length]['y_direction'] < 0:
@@ -184,16 +264,28 @@ class Rule(Rule.Rule):
                     # 左下角的三角形。
                     if is_goto_left:
                         fail_code = 430
-                        if format_dict_array[(idx+0)%nodes_length]['y_equal_fuzzy']:
-                            if format_dict_array[(idx+1)%nodes_length]['y_direction'] < 0:
-                                if format_dict_array[(idx+2)%nodes_length]['y_direction'] > 0:
-                                    if format_dict_array[(idx+3)%nodes_length]['y_direction'] > 0:
-                                        is_match_pattern = True
+                        if not is_more_one_dot:
+                            # normal mode.
+                            if format_dict_array[(idx+0)%nodes_length]['y_equal_fuzzy']:
+                                if format_dict_array[(idx+1)%nodes_length]['y_direction'] < 0:
+                                    if format_dict_array[(idx+2)%nodes_length]['y_direction'] > 0:
+                                        if format_dict_array[(idx+3)%nodes_length]['y_direction'] > 0:
+                                            is_match_pattern = True
+                        else:
+                            # more 1 dot.
+                            if format_dict_array[(idx+0)%nodes_length]['y_equal_fuzzy']:
+                                if format_dict_array[(idx+1)%nodes_length]['y_equal_fuzzy']:
+                                    if format_dict_array[(idx+2)%nodes_length]['y_direction'] < 0:
+                                        if format_dict_array[(idx+3)%nodes_length]['y_direction'] > 0:
+                                            if format_dict_array[(idx+4)%nodes_length]['y_direction'] > 0:
+                                                is_match_pattern = True
 
+    
                     # 增加新的 case: not horizontal line
                     RIGHT_ARM_LENGTH_MIN = 100
-                    RIGHT_ARM_VERTICAL_DIFF_MAX = 3
-                    RIGHT_ARM_HORIZONTAL_DIFF_MAX = 3
+                    # 允許的誤差值。
+                    RIGHT_ARM_VERTICAL_DIFF_MAX = 4
+                    RIGHT_ARM_HORIZONTAL_DIFF_MAX = 4
                     # for case:.12816 「嘠」.
                     # for case:.15996 尾。
                     if not is_match_pattern:
@@ -245,15 +337,35 @@ class Rule(Rule.Rule):
                                                             if format_dict_array[(idx+4)%nodes_length]['y_direction'] < 0:
                                                                 is_match_pattern = True
                                                                 is_slash_with_triangle = True
+                    # 右上角的三角形 + more 1 dot。
+                    if is_more_one_dot:
+                        # very short edge.
+                        if format_dict_array[(idx+0)%nodes_length]['y_equal_fuzzy']:
+                            if format_dict_array[(idx+1)%nodes_length]['y_equal_fuzzy']:
+                                if format_dict_array[(idx+2)%nodes_length]['y_direction'] > 0:
+                                    if format_dict_array[(idx+3)%nodes_length]['y_direction'] < 0:
+                                        if format_dict_array[(idx+4)%nodes_length]['y_direction'] < 0:
+                                            is_match_pattern = True
+
 
                 # skip small angle
                 if is_match_pattern:
                     fail_code = 500
                     is_match_pattern = False
 
-                    slide_percent_1 = spline_util.slide_percent(format_dict_array[(idx+0)%nodes_length]['x'],format_dict_array[(idx+0)%nodes_length]['y'],format_dict_array[(idx+1)%nodes_length]['x'],format_dict_array[(idx+1)%nodes_length]['y'],format_dict_array[(idx+2)%nodes_length]['x'],format_dict_array[(idx+2)%nodes_length]['y'])
-                    slide_percent_2 = spline_util.slide_percent(format_dict_array[(idx+1)%nodes_length]['x'],format_dict_array[(idx+1)%nodes_length]['y'],format_dict_array[(idx+2)%nodes_length]['x'],format_dict_array[(idx+2)%nodes_length]['y'],format_dict_array[(idx+3)%nodes_length]['x'],format_dict_array[(idx+3)%nodes_length]['y'])
-                    slide_percent_3 = spline_util.slide_percent(format_dict_array[(idx+2)%nodes_length]['x'],format_dict_array[(idx+2)%nodes_length]['y'],format_dict_array[(idx+3)%nodes_length]['x'],format_dict_array[(idx+3)%nodes_length]['y'],format_dict_array[(idx+4)%nodes_length]['x'],format_dict_array[(idx+4)%nodes_length]['y'])
+                    slide_percent_1 = 0
+                    slide_percent_2 = 0
+                    slide_percent_3 = 0
+
+                    if not is_more_one_dot:
+                        # normal case.
+                        slide_percent_1 = spline_util.slide_percent(format_dict_array[(idx+0)%nodes_length]['x'],format_dict_array[(idx+0)%nodes_length]['y'],format_dict_array[(idx+1)%nodes_length]['x'],format_dict_array[(idx+1)%nodes_length]['y'],format_dict_array[(idx+2)%nodes_length]['x'],format_dict_array[(idx+2)%nodes_length]['y'])
+                        slide_percent_2 = spline_util.slide_percent(format_dict_array[(idx+1)%nodes_length]['x'],format_dict_array[(idx+1)%nodes_length]['y'],format_dict_array[(idx+2)%nodes_length]['x'],format_dict_array[(idx+2)%nodes_length]['y'],format_dict_array[(idx+3)%nodes_length]['x'],format_dict_array[(idx+3)%nodes_length]['y'])
+                        slide_percent_3 = spline_util.slide_percent(format_dict_array[(idx+2)%nodes_length]['x'],format_dict_array[(idx+2)%nodes_length]['y'],format_dict_array[(idx+3)%nodes_length]['x'],format_dict_array[(idx+3)%nodes_length]['y'],format_dict_array[(idx+4)%nodes_length]['x'],format_dict_array[(idx+4)%nodes_length]['y'])
+                    else:
+                        slide_percent_1 = spline_util.slide_percent(format_dict_array[(idx+0)%nodes_length]['x'],format_dict_array[(idx+0)%nodes_length]['y'],format_dict_array[(idx+2)%nodes_length]['x'],format_dict_array[(idx+2)%nodes_length]['y'],format_dict_array[(idx+3)%nodes_length]['x'],format_dict_array[(idx+3)%nodes_length]['y'])
+                        slide_percent_2 = spline_util.slide_percent(format_dict_array[(idx+2)%nodes_length]['x'],format_dict_array[(idx+2)%nodes_length]['y'],format_dict_array[(idx+3)%nodes_length]['x'],format_dict_array[(idx+3)%nodes_length]['y'],format_dict_array[(idx+4)%nodes_length]['x'],format_dict_array[(idx+4)%nodes_length]['y'])
+                        slide_percent_3 = spline_util.slide_percent(format_dict_array[(idx+3)%nodes_length]['x'],format_dict_array[(idx+3)%nodes_length]['y'],format_dict_array[(idx+4)%nodes_length]['x'],format_dict_array[(idx+4)%nodes_length]['y'],format_dict_array[(idx+5)%nodes_length]['x'],format_dict_array[(idx+5)%nodes_length]['y'])
 
                     #if True:
                     #if False:
@@ -264,6 +376,10 @@ class Rule(Rule.Rule):
                         print("data:",format_dict_array[(idx+1)%nodes_length]['x'],format_dict_array[(idx+1)%nodes_length]['y'],format_dict_array[(idx+2)%nodes_length]['x'],format_dict_array[(idx+2)%nodes_length]['y'],format_dict_array[(idx+3)%nodes_length]['x'],format_dict_array[(idx+3)%nodes_length]['y'])
                         print("slide_percent 3:", slide_percent_3)
                         print("data:",format_dict_array[(idx+2)%nodes_length]['x'],format_dict_array[(idx+2)%nodes_length]['y'],format_dict_array[(idx+3)%nodes_length]['x'],format_dict_array[(idx+3)%nodes_length]['y'],format_dict_array[(idx+4)%nodes_length]['x'],format_dict_array[(idx+4)%nodes_length]['y'])
+                        
+                        print("SLIDE_1_PERCENT_MIN,MAX:",SLIDE_1_PERCENT_MIN,SLIDE_1_PERCENT_MAX)
+                        print("SLIDE_2_PERCENT_MIN,MAX:",SLIDE_2_PERCENT_MIN,SLIDE_2_PERCENT_MAX)
+                        print("SLIDE_3_PERCENT_MIN,MAX:",SLIDE_3_PERCENT_MIN,SLIDE_3_PERCENT_MAX)
 
                     if slide_percent_2 >= SLIDE_2_PERCENT_MIN and slide_percent_2 <= SLIDE_2_PERCENT_MAX:
                         fail_code = 510
@@ -301,11 +417,18 @@ class Rule(Rule.Rule):
                     is_mouth_mode = False
                     is_row_vertial_mode = False
 
+                    # for case: 攖 uni6516
+                    if is_more_one_dot:
+                        del format_dict_array[(idx+2)%nodes_length]
+                        if idx > (idx+2)%nodes_length:
+                            idx -=1
+                        nodes_length = len(format_dict_array)
 
                     X_EQUAL_ACCURACY=5
                     if not is_from_vertical:
                         # come from horizon
                         if not is_goto_left:
+                            # left to right.
                             if format_dict_array[(idx+4)%nodes_length]['y_direction'] < 0:
                                 # for case "口"
                                 if format_dict_array[(idx+5)%nodes_length]['t'] == 'l':
@@ -382,6 +505,8 @@ class Rule(Rule.Rule):
                             nodes_length = len(format_dict_array)
                             #print("del code:", format_dict_array[(idx+3)%nodes_length]['code'])
                             del format_dict_array[(idx+3)%nodes_length]
+                            if idx > (idx+3)%nodes_length:
+                                idx -= 1
 
                         if self.config.PROCESS_MODE == "MEATBALL":
                             self.apply_round(format_dict_array,idx)

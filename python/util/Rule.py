@@ -1041,15 +1041,25 @@ class Rule():
         nodes_length = len(format_dict_array)
         current_x = format_dict_array[idx]['x']
         current_y = format_dict_array[idx]['y']
+
         end_x = format_dict_array[(idx+3)%nodes_length]['x']
         end_y = format_dict_array[(idx+3)%nodes_length]['y']
-        full_distance = spline_util.get_distance(current_x,current_y,end_x,end_y)
-        distance_diff = full_distance - format_dict_array[(idx+0)%nodes_length]['distance']
-        new_x,new_y=spline_util.two_point_extend(current_x,current_y,format_dict_array[(idx+1)%nodes_length]['x'],format_dict_array[(idx+1)%nodes_length]['y'], distance_diff)
+
+        #full_distance = spline_util.get_distance(current_x,current_y,end_x,end_y)
+        #distance_diff = full_distance - format_dict_array[(idx+0)%nodes_length]['distance']
+        #new_x,new_y=spline_util.two_point_extend(current_x,current_y,format_dict_array[(idx+1)%nodes_length]['x'],format_dict_array[(idx+1)%nodes_length]['y'], distance_diff)
         #print("new_x,new_y:", new_x,new_y)
 
-        center_distance = format_dict_array[(idx+1)%nodes_length]['distance'] * 0.6
-        center_x, center_y=spline_util.two_point_extend(current_x,current_y,format_dict_array[(idx+1)%nodes_length]['x'],format_dict_array[(idx+1)%nodes_length]['y'], center_distance)
+        
+        center_x, center_y = 0,0
+        if not format_dict_array[(idx+0)%nodes_length]['x_equal_fuzzy']:
+            # normal case.
+            center_distance = format_dict_array[(idx+1)%nodes_length]['distance'] * 0.5
+            center_x, center_y=spline_util.two_point_extend(current_x,current_y,format_dict_array[(idx+1)%nodes_length]['x'],format_dict_array[(idx+1)%nodes_length]['y'], center_distance)
+        else:
+            # begin from vertical.
+            center_x, center_y=int((format_dict_array[(idx+1)%nodes_length]['x'] + format_dict_array[(idx+3)%nodes_length]['x'])/2),int((format_dict_array[(idx+1)%nodes_length]['y'] + format_dict_array[(idx+3)%nodes_length]['y'])/2)
+
         #print("center_x,center_y:", center_x,center_y)
 
         center_x_offset = format_dict_array[(idx+2)%nodes_length]['x'] - center_x
@@ -1069,12 +1079,18 @@ class Rule():
         current_x = format_dict_array[(idx+1)%nodes_length]['x']
         current_y = format_dict_array[(idx+1)%nodes_length]['y']
 
-        right_distance = spline_util.get_distance(current_x,current_y,end_x,end_y)
-        #print("right_distance #2:", right_distance)
-        re_center_x,re_center_y=spline_util.two_point_extend(format_dict_array[(idx+0)%nodes_length]['x'],format_dict_array[(idx+0)%nodes_length]['y'],format_dict_array[(idx+1)%nodes_length]['x'],format_dict_array[(idx+1)%nodes_length]['y'], int(right_distance / 2))
-        #print("re_center_x,re_center_y:", re_center_x,re_center_y)
-        re_center_x += center_x_offset
-        re_center_y += center_y_offset
+        re_center_x,re_center_y=0,0
+        if not format_dict_array[(idx+0)%nodes_length]['x_equal_fuzzy']:
+            # normal case.
+            right_distance = spline_util.get_distance(current_x,current_y,end_x,end_y)
+            #print("right_distance #2:", right_distance)
+            re_center_x,re_center_y=spline_util.two_point_extend(format_dict_array[(idx+0)%nodes_length]['x'],format_dict_array[(idx+0)%nodes_length]['y'],format_dict_array[(idx+1)%nodes_length]['x'],format_dict_array[(idx+1)%nodes_length]['y'], int(right_distance / 2))
+            #print("re_center_x,re_center_y:", re_center_x,re_center_y)
+            re_center_x += center_x_offset
+            re_center_y += center_y_offset
+        else:
+            re_center_x = center_x
+            re_center_y = format_dict_array[(idx+2)%nodes_length]['y']
 
         new_code= " %d %d %d %d %d %d c 1\n" % (left_top_x,left_top_y,left_top_x,left_top_y,re_center_x,re_center_y)
         format_dict_array[(idx+2)%nodes_length]['code']=new_code
