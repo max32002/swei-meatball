@@ -38,7 +38,8 @@ class Rule(Rule.Rule):
 
         # for case: uni8F9C 辜的辛的立的右上角。 0.325/0.725/1.98
         # for case: uni9059 遙的缶。0.865 / 0.6 / 1.95
-        SLIDE_21_PERCENT_MIN = 0.00
+        # PS: 這裡的判斷 和 rule103 是重覆判斷。
+        SLIDE_21_PERCENT_MIN = 0.01
         SLIDE_21_PERCENT_MAX = 1.45
 
         # clone
@@ -79,7 +80,7 @@ class Rule(Rule.Rule):
                 #is_debug_mode = True
 
                 if is_debug_mode:
-                    debug_coordinate_list = [[186,83]]
+                    debug_coordinate_list = [[558,696]]
                     if not([format_dict_array[idx]['x'],format_dict_array[idx]['y']] in debug_coordinate_list):
                         continue
 
@@ -104,9 +105,9 @@ class Rule(Rule.Rule):
                 if is_match_pattern:
                     fail_code = 200
                     is_match_pattern = False
-                    if format_dict_array[(idx+1)%nodes_length]['distance'] >= self.config.COL_STROKE_WIDTH_MIN:
+                    if format_dict_array[(idx+1)%nodes_length]['distance'] >= self.config.STROKE_WIDTH_MIN:
                         fail_code = 210
-                        if format_dict_array[(idx+1)%nodes_length]['distance'] <= self.config.COL_STROKE_WIDTH_MAX:
+                        if format_dict_array[(idx+1)%nodes_length]['distance'] <= self.config.STROKE_WIDTH_MAX:
                             fail_code = 220
                             
                             if format_dict_array[(idx+2)%nodes_length]['distance'] >= self.config.COL_TRIANGLE_CHIN_MIN:
