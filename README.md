@@ -4,6 +4,7 @@
 
 相比於思源宋體，獅尾肉丸的造型更加簡明現代，版面效果清新輕快。
 
+## 與其他字體的比較
 「思源宋體」、「獅尾四季春」、「獅尾肉丸」的比較：
 ![字體比較](https://github.com/max32002/swei-meatball/raw/master/preview/compare_noto_serif.png)
 
@@ -14,11 +15,17 @@
 * 在「草」部的筆畫，獅尾是分開的二個部份。
 * 字體裡的「草字頭部首」中間該不該連起來，「肉字旁部首」該不該變成「月」，要不要把手寫習慣代入印刷字體？整體看來，會不會影響視覺的延伸性？會不會影響印刷的可行性與閱讀的便利性？這個答案我也不清楚，如果你是台灣教育部標準字符的愛好者，獅尾字體應該是一個不錯的選擇。
 
-「CJK TC」和「CJK SC」的比較：
+### 「CJK TC」和「CJK SC」的比較：
 ![TC和SC比較](https://github.com/max32002/swei-meatball/raw/master/preview/compare_tc_sc.png)
 * 在「肉」、「糸」、「女」、「辶」、「食」的筆畫不同，CJK SC 「肉字旁部首」變成「月」。 
 * 在「草」部的筆畫，CJK SC 中間連起來。
 * 雨、身、戶、舟、北、㕣、酋字寫法不同。
+
+### 「CJK TC」和「CJK JP」的比較：
+![TC和SC比較](https://github.com/max32002/swei-meatball/raw/master/preview/compare_tc_jp.png)
+* 在「肉」、「糸」、「女」、「辶」、「食」的筆畫不同，CJK JP 「肉字旁部首」變成「月」。 
+* 在「草」部的筆畫，CJK JP 中間連起來。
+* 雨、言、青、兌、賣、直、真、曾、戶、北、㕣、酋字寫法不同。其他![常見與日系字型的差異](https://max-everyday.com/2020/06/taiwanpearl/#diff)。
 
 ## 更新日誌
 [點擊此處](https://github.com/max32002/swei-meatball/blob/master/change_log.md) 查看更新記錄。
