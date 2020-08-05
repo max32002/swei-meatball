@@ -30,7 +30,7 @@ class Rule(Rule.Rule):
         # default: 1.13 to 1.26,(.2639,真)1.36, (.26356, 片) 1.0, (.10924, 公) 0.80
         # for case: (uni8F63,轣) 1.485
         SLIDE_3_PERCENT_MIN = 0.70
-        SLIDE_3_PERCENT_MAX = 1.59
+        SLIDE_3_PERCENT_MAX = 1.70
 
         # clone
         format_dict_array=[]
@@ -186,7 +186,7 @@ class Rule(Rule.Rule):
                     if format_dict_array[(idx+0)%nodes_length]['x_direction'] > 0:
                         if format_dict_array[(idx+1)%nodes_length]['x_direction'] > 0:
                             if format_dict_array[(idx+2)%nodes_length]['x_direction'] > 0:
-                                if format_dict_array[(idx+3)%nodes_length]['x_direction'] < 0:
+                                if format_dict_array[(idx+3)%nodes_length]['x_direction'] <= 0:
                                     is_match_pattern = True
 
                     # allow +0 vertical or horizontal
@@ -204,7 +204,7 @@ class Rule(Rule.Rule):
                     if is_pass_dot_0_check:
                         if format_dict_array[(idx+1)%nodes_length]['x_direction'] > 0:
                             if format_dict_array[(idx+2)%nodes_length]['x_direction'] > 0:
-                                if format_dict_array[(idx+3)%nodes_length]['x_direction'] < 0:
+                                if format_dict_array[(idx+3)%nodes_length]['x_direction'] <= 0:
                                     is_match_pattern = True
                                     is_from_vertical = True
 
@@ -215,7 +215,7 @@ class Rule(Rule.Rule):
                     if format_dict_array[(idx+0)%nodes_length]['x_direction'] < 0:
                         if format_dict_array[(idx+1)%nodes_length]['x_direction'] < 0:
                             if format_dict_array[(idx+2)%nodes_length]['x_direction'] < 0:
-                                if format_dict_array[(idx+3)%nodes_length]['x_direction'] > 0:
+                                if format_dict_array[(idx+3)%nodes_length]['x_direction'] >= 0:
                                     is_match_pattern = True
                                     is_goto_left = True
 
@@ -225,7 +225,7 @@ class Rule(Rule.Rule):
                         if format_dict_array[(idx+0)%nodes_length]['x_direction'] > 0:
                             if format_dict_array[(idx+1)%nodes_length]['x_direction'] < 0:
                                 if format_dict_array[(idx+2)%nodes_length]['x_direction'] > 0:
-                                    if format_dict_array[(idx+3)%nodes_length]['x_direction'] > 0:
+                                    if format_dict_array[(idx+3)%nodes_length]['x_direction'] >= 0:
                                         if format_dict_array[(idx+4)%nodes_length]['x_direction'] < 0:
                                             is_match_pattern = True
 
@@ -235,7 +235,7 @@ class Rule(Rule.Rule):
                         if format_dict_array[(idx+0)%nodes_length]['x_direction'] < 0:
                             if format_dict_array[(idx+1)%nodes_length]['x_direction'] > 0:
                                 if format_dict_array[(idx+2)%nodes_length]['x_direction'] < 0:
-                                    if format_dict_array[(idx+3)%nodes_length]['x_direction'] < 0:
+                                    if format_dict_array[(idx+3)%nodes_length]['x_direction'] <= 0:
                                         if format_dict_array[(idx+4)%nodes_length]['x_direction'] > 0:
                                             is_match_pattern = True
                                             is_goto_left = True

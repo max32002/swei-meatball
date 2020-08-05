@@ -1058,7 +1058,9 @@ class Rule():
         center_x, center_y = 0,0
         if not format_dict_array[(idx+0)%nodes_length]['x_equal_fuzzy']:
             # normal case.
-            center_distance = format_dict_array[(idx+1)%nodes_length]['distance'] * 0.5
+            prefer_rate = 0.5   # default
+            prefer_rate = 0.6   # a little bit left.
+            center_distance = format_dict_array[(idx+1)%nodes_length]['distance'] * prefer_rate
             center_x, center_y=spline_util.two_point_extend(current_x,current_y,format_dict_array[(idx+1)%nodes_length]['x'],format_dict_array[(idx+1)%nodes_length]['y'], center_distance)
         else:
             # begin from vertical.

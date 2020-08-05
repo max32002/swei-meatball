@@ -2,7 +2,7 @@
 #encoding=utf-8
 
 class TtfConfig():
-    VERSION = "1.047"
+    VERSION = "1.048"
     PROCESS_MODE = "SPRING"
     PROCESS_MODE = "MEATBALL"
 
@@ -46,7 +46,7 @@ class TtfConfig():
     ROW_TRIANGLE_CHIN_MAX = 95
 
     # in regular=46, (case.11158 分, Regular) 69
-    ROW_TRIANGLE_FLAT_CHIN_MIN = 26
+    ROW_TRIANGLE_FLAT_CHIN_MIN = 22
     ROW_TRIANGLE_FLAT_CHIN_MAX = 84
 
     # for rule#101
@@ -149,7 +149,7 @@ class TtfConfig():
             self.ROW_TRIANGLE_CHIN_MAX = 88
 
             # in regular=46
-            self.ROW_TRIANGLE_FLAT_CHIN_MIN = 22
+            self.ROW_TRIANGLE_FLAT_CHIN_MIN = 20
             self.ROW_TRIANGLE_FLAT_CHIN_MAX = 80
 
             # for rule#101

@@ -1,6 +1,6 @@
 # 獅尾肉丸 Swei Meatball
 
-獅尾肉丸字體基於[思源宋體](https://github.com/adobe-fonts/source-han-serif)的三角形換半圓形改造，更加簡明現代化的字體。支援简体中文、繁體中文、韓文與日文；歡迎大家自由應用、自由優化、自由改作！
+獅尾肉丸字體基於[思源宋體](https://github.com/adobe-fonts/source-han-serif)的三角形換半圓形改造，遊走於古典與可愛之間的字體。支援简体中文、繁體中文、韓文與日文；歡迎大家自由應用、自由優化、自由改作！
 
 相比於思源宋體，獅尾肉丸的造型更加簡明現代，版面效果清新輕快。
 
@@ -65,6 +65,10 @@
     
 ## 相關網頁
 
+* 花園肉丸
+https://max-everyday.com/2020/08/hana-meatball/
+* B2花園
+https://max-everyday.com/2020/08/b2-hana-font/
 * 獅尾XD珍珠 Swei.XD.Pearl
 https://max-everyday.com/2020/07/swei-xd-pearl/
 * 獅尾B2黑體 Swei B2 Sans
