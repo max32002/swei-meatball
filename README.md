@@ -42,8 +42,8 @@
 ```
 @font-face {
   font-family: SweiB2LegCJKtc-Regular;
-  src: url(https://github.com/max32002/swei-meatball/raw/master/WebFont/CJK%20TC/SweiMeatballCJKtc-Regular.woff2) format("woff2")
-  , url(https://github.com/max32002/swei-meatball/raw/master/WebFont/CJK%20TC/SweiMeatballCJKtc-Regular.woff) format("woff");
+  src: url(https://cdn.jsdelivr.net/gh/max32002/swei-meatball@1.0/WebFont/CJK%20TC/SweiMeatballCJKtc-Regular.woff2) format("woff2")
+  , url(https://cdn.jsdelivr.net/gh/max32002/swei-meatball@1.0/WebFont/CJK%20TC/SweiMeatballCJKtc-Regular.woff) format("woff");
 }
 ```
 您也可以透過從CDN引入在GitHub上woff2檔案的網址，再把上方的url()內容置換成CDN快取後的網址，將可大幅加快網頁載入。推薦使用 jsDelivr 的服務，在速度上挺不錯的，參考看看： www.cdnperf.com/#!performance,Asia 。
@@ -65,6 +65,10 @@
     
 ## 相關網頁
 
+* 獅尾腿圓 Swei.Gothic.Leg
+https://max-everyday.com/2020/08/swei-gothic-leg/
+* 獅尾彩虹腿 Swei.Rainbow.Leg
+https://max-everyday.com/2020/08/swei-rainbow-leg/
 * 花園肉丸
 https://max-everyday.com/2020/08/hana-meatball/
 * B2花園
